@@ -34,4 +34,9 @@ class QuestionIndexViewTests(TestCase):
         self.assertQuerysetEqual(response.context['latest_question_list'],[])
 
     def test_past_question(self):
-        
+        create_question(question_text="Past question.",days=-30)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'],
+            ['<Question:Past question.>']
+        )
