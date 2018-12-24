@@ -47,4 +47,11 @@ class QuestionIndexViewTests(TestCase):
         self.assertContains(response,"No polls are available.")
         self.assertQuerysetEqual(response,context['latest_question_list'],[])
 
-    def test_
+    def test_future_question_and_past_question(self):
+        create_question(question_text="Past question",days=-30)
+        create_question(question_text="Future question.",days=30)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(
+            response.context['latest_question_list'],
+            ['<Question:Past quesiton.>']
+        )
